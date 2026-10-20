@@ -217,36 +217,72 @@ def run_comparative_experiments(model: AdaptiveCodingClassifier, test_samples: l
 
 
 def run_snr_sweep_experiment(model: AdaptiveCodingClassifier, test_samples: list, ldpc: LDPCCodec):
-    """Sweeps channel SNR from 2 dB to 10 dB to evaluate LDPC error correction waterfall curves."""
-    snr_levels = np.arange(2.0, 11.0, 1.5)
+    """
+    Sweeps channel SNR from 2 dB to 12 dB using direct Monte-Carlo BER simulation.
+    Uses 100,000 coded bits per SNR point for accurate BER estimation down to ~1e-5.
+    Impulse probability P_impulse = 5e-4 to model wired EMI bursts.
+    """
+    snr_levels = [2.0, 3.5, 5.0, 6.5, 8.0, 9.5, 11.0, 12.0]
+    N_BITS_PER_SNR = 100_000  # coded bits per SNR sweep point
     records = []
-    
-    # Select representative subset
-    subset = test_samples[:18]
 
-    for snr in snr_levels:
-        channel = WiredChannel(snr_db=snr, impulse_prob=0.0005, seed=int(snr * 100))
-        pipeline = AdaptiveTransmissionPipeline(model, ldpc, channel)
+    rng = np.random.RandomState(77)
+    impulse_prob = 5e-4
+    impulse_mag = 3.0
 
-        raw_bers = []
-        post_bers = []
-        frame_successes = []
-        iterations = []
+    for snr_db in snr_levels:
+        snr_lin = 10.0 ** (snr_db / 10.0)
+        # sigma accounts for code rate R=0.5: Eb/No -> Ec/No = R * Eb/No
+        # sigma^2 = 1/(2 * R * Eb/No)
+        sigma = np.sqrt(1.0 / (2.0 * 0.5 * snr_lin))
 
-        for sample in subset:
-            res = pipeline.run_pipeline(sample["data"], forced_codec_id=None)
-            raw_bers.append(res["raw_channel_ber"])
-            post_bers.append(res["post_ldpc_ber"])
-            frame_successes.append(res["frame_success_rate"])
-            iterations.append(res["avg_ldpc_iterations"])
+        total_raw_errors = 0
+        total_ldpc_errors = 0
+        total_bits = 0
+        total_blocks = 0
+        syndrome_ok = 0
+        total_iters = 0
 
+        n_blocks = max(1, N_BITS_PER_SNR // ldpc.n)
+        for _ in range(n_blocks):
+            # Random message block
+            m = rng.randint(0, 2, size=ldpc.k).astype(np.uint8)
+            c = ldpc.encode_block(m)
+
+            # BPSK modulation: 0->+1, 1->-1
+            s = 1.0 - 2.0 * c.astype(np.float64)
+
+            # AWGN + impulse noise
+            noise = rng.normal(0.0, sigma, size=ldpc.n)
+            burst = (rng.random(size=ldpc.n) < impulse_prob)
+            impulse = rng.choice([-1.0, 1.0], size=ldpc.n) * impulse_mag
+            y = s + noise + burst * impulse
+
+            # Raw BER (hard decision)
+            hard_raw = (y < 0).astype(np.uint8)
+            total_raw_errors += int(np.sum(hard_raw != c))
+
+            # Soft LLR for LDPC
+            llr = 2.0 * y / (sigma ** 2)
+            decoded, valid, iters = ldpc.decode_llr_minsum(llr)
+
+            total_ldpc_errors += int(np.sum(decoded[:ldpc.k] != m))
+            total_bits += ldpc.k
+            total_blocks += 1
+            if valid:
+                syndrome_ok += 1
+            total_iters += iters
+
+        raw_ber = total_raw_errors / (total_blocks * ldpc.n)
+        ldpc_ber = total_ldpc_errors / total_bits
         records.append({
-            "snr_db": snr,
-            "mean_raw_ber": np.mean(raw_bers),
-            "mean_post_ldpc_ber": np.mean(post_bers),
-            "frame_success_rate": np.mean(frame_successes),
-            "avg_iterations": np.mean(iterations)
+            "snr_db": snr_db,
+            "mean_raw_ber": raw_ber,
+            "mean_post_ldpc_ber": max(ldpc_ber, 1e-7),  # floor for log-scale plotting
+            "frame_success_rate": syndrome_ok / total_blocks,
+            "avg_iterations": total_iters / total_blocks
         })
+        print(f"   SNR={snr_db:.1f}dB | raw BER={raw_ber:.3e} | LDPC BER={ldpc_ber:.3e} | Syn={syndrome_ok/total_blocks*100:.1f}%")
 
     return pd.DataFrame(records)
 
@@ -254,7 +290,8 @@ def run_snr_sweep_experiment(model: AdaptiveCodingClassifier, test_samples: list
 def plot_research_figures(eval_ann: dict, df_comp: pd.DataFrame, df_snr: pd.DataFrame, output_dir: str):
     """Generates publication-quality charts for research paper."""
     os.makedirs(output_dir, exist_ok=True)
-    plt.style.use('seaborn-v0_8-whitegrid' if 'seaborn-v0_8-whitegrid' in plt.style.available else 'default')
+    style = 'seaborn-v0_8-whitegrid' if 'seaborn-v0_8-whitegrid' in plt.style.available else 'seaborn-whitegrid' if 'seaborn-whitegrid' in plt.style.available else 'default'
+    plt.style.use(style)
 
     # Figure 1: Confusion Matrix of ANN Classifier
     fig, ax = plt.subplots(figsize=(6, 5), dpi=300)
@@ -313,6 +350,45 @@ def plot_research_figures(eval_ann: dict, df_comp: pd.DataFrame, df_snr: pd.Data
     ax.legend(frameon=True)
     plt.tight_layout()
     fig.savefig(os.path.join(output_dir, "fig3_ldpc_ber_waterfall.png"))
+    plt.close()
+
+    # Figure 4: ANN Training & Validation Loss Curves
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.5), dpi=300)
+    epochs_range = range(1, len(eval_ann['train_losses']) + 1)
+
+    ax = axes[0]
+    ax.plot(epochs_range, eval_ann['train_losses'], 'b-', linewidth=2, label='Training Loss')
+    ax.plot(epochs_range, eval_ann['val_losses'], 'r--', linewidth=2, label='Validation Loss')
+    ax.set_xlabel('Epoch', fontweight='bold')
+    ax.set_ylabel('Cross-Entropy Loss', fontweight='bold')
+    ax.set_title('ANN Training Convergence', fontweight='bold')
+    ax.legend(frameon=True)
+    ax.grid(True, alpha=0.5)
+
+    # Per-class precision and recall
+    from sklearn.metrics import precision_recall_fscore_support
+    prec_pc, rec_pc, f1_pc, _ = precision_recall_fscore_support(
+        eval_ann['y_test'], eval_ann['y_pred'], average=None, labels=[0, 1, 2, 3], zero_division=0
+    )
+    class_names = ["Huffman", "Arithmetic", "LZ77 Dict", "Raw"]
+    x_labels = np.arange(4)
+    w = 0.3
+    ax2 = axes[1]
+    ax2.bar(x_labels - w/2, prec_pc * 100, width=w, label='Precision (%)', color='#4e79a7', alpha=0.88)
+    ax2.bar(x_labels + w/2, rec_pc * 100, width=w, label='Recall (%)', color='#f28e2b', alpha=0.88)
+    for i, (p, r) in enumerate(zip(prec_pc, rec_pc)):
+        ax2.text(i - w/2, p * 100 + 0.8, f'{p*100:.0f}', ha='center', va='bottom', fontsize=9, color='#4e79a7')
+        ax2.text(i + w/2, r * 100 + 0.8, f'{r*100:.0f}', ha='center', va='bottom', fontsize=9, color='#f28e2b')
+    ax2.set_xticks(x_labels)
+    ax2.set_xticklabels(class_names)
+    ax2.set_ylabel('Score (%)', fontweight='bold')
+    ax2.set_title('Per-Class Precision & Recall', fontweight='bold')
+    ax2.set_ylim(0, 115)
+    ax2.legend(frameon=True)
+    ax2.grid(True, alpha=0.4, axis='y')
+
+    plt.tight_layout()
+    fig.savefig(os.path.join(output_dir, "fig4_learning_curves_and_class_metrics.png"))
     plt.close()
 
 

@@ -39,7 +39,8 @@ def extract_features(data: bytes) -> np.ndarray:
     # 2. Byte Variance
     arr = np.frombuffer(data, dtype=np.uint8)
     mean_val = np.mean(arr)
-    var_val = np.var(arr) / (128.0 ** 2)
+    # Normalize by max possible variance for U[0,255]: Var_max = (255/2)^2 = 16256.25
+    var_val = np.var(arr) / 16256.25
     
     # 3. Zero-byte density
     zero_density = counts.get(0, 0) / n
