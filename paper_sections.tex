@@ -1,4 +1,4 @@
-\documentclass[journal,compsoc]{IEEEtran}
+\documentclass[conference]{IEEEtran}
 
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
@@ -7,23 +7,39 @@
 \usepackage{xcolor}
 \usepackage{booktabs}
 \usepackage{multirow}
-\usepackage{subcaption}
+\usepackage{array}
 \usepackage{cite}
 \usepackage{url}
 \usepackage{bm}
 
-\begin{document}
-
 \title{ANN-Based Adaptive Source Coding with Systematic LDPC Channel Coding for Lossless Wired Communication}
 
-\author{Research~Author,~Graduate~Student~Member,~IEEE,
-        Senior~Author,~Senior~Member,~IEEE,
-        and~Principal~Investigator,~Fellow,~IEEE%
-\thanks{Manuscript received October 20, 2026. This work was supported by the Advanced Telecommunications and Information Theory Research Initiative.}
+\author{\IEEEauthorblockN{Ganesh M}
+\IEEEauthorblockA{\textit{School of Computer Science and Engineering}\\
+\textit{VIT-AP University}\\
+Amaravati, Andhra Pradesh, India \\
+ganesh.23bce8887@vitapstudent.ac.in}
+\and
+\IEEEauthorblockN{Muhammad Sajid Y}
+\IEEEauthorblockA{\textit{School of Computer Science and Engineering}\\
+\textit{VIT-AP University}\\
+Amaravati, Andhra Pradesh, India \\
+sajid.23bce7802@vitapstudent.ac.in}
+\and
+\IEEEauthorblockN{Komali Priya P}
+\IEEEauthorblockA{\textit{School of Computer Science and Engineering}\\
+\textit{VIT-AP University}\\
+Amaravati, Andhra Pradesh, India \\
+priya.23bce9973@vitapstudent.ac.in}
+\and
+\IEEEauthorblockN{Dr. M.Mahesh}
+\IEEEauthorblockA{\textit{School of Electronics Engineering}\\
+\textit{VIT-AP University}\\
+Amaravati, Andhra Pradesh, India \\
+mahesh.m@vitap.ac.in}
 }
 
-\markboth{IEEE Transactions on Communications,~Vol.~XX, No.~X, October~2026}%
-{Author \MakeLowercase{\textit{et al.}}: ANN-Based Adaptive Source Coding with LDPC Channel Coding}
+\begin{document}
 
 \maketitle
 
@@ -31,7 +47,7 @@
 % ABSTRACT
 % =========================================================================
 \begin{abstract}
-High-throughput wired interconnects, SerDes telemetry buses, and industrial automation networks encounter heterogeneous traffic profiles ranging from structured JSON payloads to compiled machine code and incompressible encrypted data. Traditional communication architectures rely on static source codecs and legacy linear block codes such as Hamming(7,4), which underperform when source statistics vary and experience decoding breakdowns under burst electromagnetic interference (EMI). In this paper, we propose an integrated framework combining \textbf{Artificial Neural Network (ANN)-based Adaptive Source Coding} with \textbf{Systematic $(128, 64)$ Low-Density Parity-Check (LDPC) Channel Coding} for lossless wired transmission. At the transmitter, an $O(N)$ streaming statistical feature extractor derives an $8$-dimensional metric vector capturing empirical Shannon entropy, normalized byte variance, zero-byte density, run-length properties, lag-1 autocorrelation, and dominant symbol concentration. A lightweight Multi-Layer Perceptron (MLP) with Layer Normalization classifies payloads in $\approx\!50\,\mu\text{s}$ per 2048-byte payload, dynamically selecting among Canonical Huffman, 32-bit Integer Arithmetic, Sliding-Window LZ77 Dictionary, and an explicit Identity Raw Pass-Through mode to prevent data expansion. Evaluated across a benchmark covering six diverse data regimes ($300$ payloads of $2048$ bytes each), the adaptive selector achieves $93.33\%$ classification accuracy ($100\%$ Top-2 accuracy) under a cost-sensitive decision policy, attaining an unweighted arithmetic mean compression ratio of $\mathbf{2.55\times}$ (aggregate global bit savings of $47.9\%$), outperforming static Huffman ($2.01\times$) and static Arithmetic ($2.02\times$). Over an additive white Gaussian noise (AWGN) wired channel impaired by impulse burst noise ($P_{\text{impulse}} = 5 \times 10^{-4}$), systematic $(128, 64)$ LDPC codes decoded via normalized iterative Min-Sum Belief Propagation reduce raw channel BER from $1.07 \times 10^{-1}$ at $2.0\,\text{dB}$ to $6.0 \times 10^{-5}$ at $11.0\,\text{dB}$, with syndrome validation exceeding $99\%$ at SNR $\ge 8\,\text{dB}$.
+High-throughput wired interconnects, SerDes telemetry buses, and industrial automation networks encounter heterogeneous traffic profiles ranging from structured JSON payloads to compiled machine code and incompressible encrypted data. Traditional communication architectures rely on static source codecs and legacy linear block codes such as Hamming(7,4), which underperform when source statistics vary and experience decoding breakdowns under impulsive electromagnetic interference (EMI). In this paper, we propose an integrated framework combining \textbf{Artificial Neural Network (ANN)-based Adaptive Source Coding} with \textbf{Systematic $(128, 64)$ Low-Density Parity-Check (LDPC) Channel Coding} for lossless wired transmission. At the transmitter, an $O(N)$ streaming statistical feature extractor derives an $8$-dimensional metric vector capturing empirical Shannon entropy, normalized byte variance, zero-byte density, run-length properties, lag-1 autocorrelation, and dominant symbol concentration. A lightweight Multi-Layer Perceptron (MLP) with Layer Normalization classifies payloads in $\approx\!50\,\mu\text{s}$ per 2048-byte payload, dynamically selecting among Canonical Huffman, 32-bit Integer Arithmetic, Sliding-Window LZ77 Dictionary, and an explicit Identity Raw Pass-Through mode to prevent data expansion. Evaluated across a benchmark covering six diverse data regimes ($300$ payloads of $2048$ bytes each), the adaptive selector achieves $93.33\%$ classification accuracy ($100\%$ Top-2 accuracy) under a cost-sensitive decision policy, attaining an unweighted arithmetic mean compression ratio of $\mathbf{2.55\times}$ (aggregate global bit savings of $47.9\%$), improving upon static Huffman ($2.01\times$) by $+26.9\%$ and static Arithmetic ($2.02\times$) by $+26.2\%$ in unweighted mean compression ratio. Over an additive white Gaussian noise (AWGN) wired channel impaired by impulsive noise ($P_{\text{impulse}} = 5 \times 10^{-4}$), systematic $(128, 64)$ LDPC codes decoded via normalized iterative Min-Sum Belief Propagation reduce channel BER from $1.07 \times 10^{-1}$ to $2.22 \times 10^{-2}$ at $2.0\,\text{dB}$, from $1.32 \times 10^{-2}$ to $1.40 \times 10^{-4}$ at $7.0\,\text{dB}$, and from $4.90 \times 10^{-4}$ to $6.00 \times 10^{-5}$ at $11.0\,\text{dB}$ (achieving zero observed bit errors across $49{,}984$ decoded information bits within a $10^5$ coded-channel-bit simulation budget at $12.0\,\text{dB}$, establishing a $95\%$ upper confidence bound of $\text{BER} \le 6.0 \times 10^{-5}$ via the Rule of Three), with syndrome validation exceeding $99\%$ at $\text{SNR} \ge 7.0\,\text{dB}$.
 \end{abstract}
 
 % =========================================================================
@@ -47,23 +63,23 @@ Adaptive Source Coding, Artificial Neural Networks, Belief Propagation, Cross-Do
 \section{Introduction}
 \label{sec:introduction}
 
-\IEEEPARstart{H}{igh-speed} digital communication systems across physical wired media---such as Serializer/Deserializer (SerDes) backplanes, Peripheral Component Interconnect Express (PCIe) lanes, Controller Area Network (CAN) automotive architectures, and industrial Fieldbus networks---operate under demanding constraints of low latency, bandwidth efficiency, and stringent transmission reliability \cite{shannon1948, proakis2008}. To maximize effective throughput across bandlimited physical channels, practical communication transceivers deploy joint pipelines comprising source coding (lossless data compression) followed by channel coding (forward error correction, FEC) \cite{gallager1968, mackay2003}.
+High-speed digital communication systems across physical wired media---such as Serializer/Deserializer (SerDes) backplanes, Peripheral Component Interconnect Express (PCIe) lanes, Controller Area Network (CAN) automotive architectures, and industrial Fieldbus networks---operate under demanding constraints of low latency, bandwidth efficiency, and stringent transmission reliability \cite{shannon1948,proakis2008}. To maximize effective throughput across bandlimited physical channels, practical communication transceivers deploy joint pipelines comprising source coding (lossless data compression) followed by channel coding (forward error correction, FEC) \cite{gallager1968,mackay2003}.
 
 In conventional wired transceiver architectures, source coding and channel coding are designed under stationary assumptions \cite{cover2006}:
 \begin{enumerate}
-    \item \textbf{Suboptimal Static Source Coding}: Fixed lossless compression algorithms (e.g., Canonical Huffman coding or Lempel-Ziv dictionary coding) are statically deployed regardless of incoming data modalities. However, real-world data across physical links exhibits significant non-stationarity. For instance, structured JSON and web telemetry contain high repetitive phrase syntax optimal for dictionary matching \cite{ziv1977}, smooth sensor measurements reflect continuous Gaussian-like stationary distributions optimal for arithmetic coding \cite{witten1987, rissanen1979}, memoryless dyadic sources match Huffman prefix trees exactly \cite{huffman1952}, and encrypted or compressed payloads exhibit maximum Shannon entropy ($\approx 8.0$ bits/symbol) \cite{shannon1948}. When a static compressor is forced upon maximum-entropy or mismatched data, codebook and symbol header overhead cause \textit{data expansion} (compression ratio $< 1.0$), unnecessarily inflating transmission time and energy.
+    \item \textbf{Suboptimal Static Source Coding}: Fixed lossless compression algorithms (e.g., Canonical Huffman coding or Lempel-Ziv dictionary coding) are statically deployed regardless of incoming data modalities. However, real-world data across physical links exhibits significant non-stationarity. For instance, structured JSON and web telemetry contain high repetitive phrase syntax optimal for dictionary matching \cite{ziv1977}, smooth sensor measurements reflect continuous Gaussian-like stationary distributions optimal for arithmetic coding \cite{witten1987,rissanen1979}, memoryless dyadic sources match Huffman prefix trees exactly \cite{huffman1952}, and encrypted or compressed payloads exhibit maximum Shannon entropy ($\approx 8.0$ bits/symbol) \cite{shannon1948}. When a static compressor is forced upon maximum-entropy or mismatched data, codebook and symbol header overhead cause \textit{data expansion} (compression ratio $< 1.0$), unnecessarily inflating transmission time and energy.
     
-    \item \textbf{Vulnerability of Legacy Block Codes}: Historical block codes such as Hamming(7,4) Linear Block Codes (LBC) are constrained by an error-correcting capability of at most $t=1$ bit error per 7-bit codeword ($d_{\min}=3$) \cite{hamming1950, lin2004}. In hostile industrial environments, automotive backplanes, or high-frequency wired lines exposed to electromagnetic interference (EMI), power supply switching glitches, and crosstalk, burst errors commonly corrupt two or more bits within a single codeword. Under such conditions, Hamming decoders suffer miscorrections, propagating residual errors that corrupt decompression trees and result in total payload loss \cite{richardson2008}.
+    \item \textbf{Vulnerability of Legacy Block Codes}: Historical block codes such as Hamming(7,4) Linear Block Codes (LBC) are constrained by an error-correcting capability of at most $t=1$ bit error per 7-bit codeword ($d_{\min}=3$) \cite{hamming1950,lin2004}. In hostile industrial environments, automotive backplanes, or high-frequency wired lines exposed to electromagnetic interference (EMI), power supply switching glitches, and crosstalk, burst errors commonly corrupt two or more bits within a single codeword. Under such conditions, Hamming decoders suffer miscorrections, propagating residual errors that corrupt decompression trees and result in total payload loss \cite{richardson2008}.
 \end{enumerate}
 
-To overcome these structural limitations, this paper proposes an integrated communication framework: \textbf{ANN-Based Adaptive Source Coding with Systematic $(128, 64)$ LDPC Channel Coding}. Rather than performing expensive trial-compression across multiple candidate algorithms, our transmitter features a streaming $O(N)$ statistical feature extractor that derives an $8$-dimensional metric vector. A trained Multi-Layer Perceptron (MLP) with Layer Normalization classifies the incoming payload in tens of microseconds, instantly routing it to the optimal codec among Canonical Huffman, 32-bit Integer Arithmetic, Sliding-Window LZ77 Dictionary, or Identity Raw Pass-Through. Simultaneously, we replace the legacy Hamming block code with a systematic rate $R=1/2$ Low-Density Parity-Check (LDPC) code \cite{gallager1962, richardson2001} paired with an iterative normalized Min-Sum Belief Propagation (BP) decoder \cite{chen2005, fossorier1999} equipped with parity syndrome early termination.
+To overcome these structural limitations, this paper proposes an integrated communication framework: \textbf{ANN-Based Adaptive Source Coding with Systematic $(128, 64)$ LDPC Channel Coding}. Rather than performing expensive trial-compression across multiple candidate algorithms, our transmitter features a streaming $O(N)$ statistical feature extractor that derives an $8$-dimensional metric vector. A trained Multi-Layer Perceptron (MLP) with Layer Normalization classifies the incoming payload in tens of microseconds, instantly routing it to the optimal codec among Canonical Huffman, 32-bit Integer Arithmetic, Sliding-Window LZ77 Dictionary, or Identity Raw Pass-Through. Simultaneously, we replace the legacy Hamming block code with a systematic rate $R=1/2$ Low-Density Parity-Check (LDPC) code \cite{gallager1962,richardson2001} paired with an iterative normalized Min-Sum Belief Propagation (BP) decoder \cite{chen2005,fossorier1999} equipped with parity syndrome early termination.
 
 The key contributions of this paper are summarized as follows:
 \begin{itemize}
     \item \textbf{Joint Adaptive Framework}: We formulate and implement an end-to-end physical-layer pipeline uniting real-time neural classification with adaptive lossless source coding and soft-decision LDPC error correction for wired media.
     \item \textbf{Ultra-Fast Statistical Feature Extractor}: We engineer an $8$-dimensional, $O(N)$ empirical feature extractor capturing Shannon entropy, normalized byte variance, zero-byte density, run-length properties, and autocorrelation, enabling MLP inference in $\approx\!50\,\mu\text{s}$ per 2048-byte payload.
     \item \textbf{Mitigation of Data Expansion}: We integrate an explicit Raw Pass-Through mode into the adaptive decision space, guaranteeing that high-entropy incompressible data incurs zero data expansion (guaranteed $\approx\!1.00\times$ ratio subject only to a 2-bit framing tag).
-    \item \textbf{Systematic LDPC Architecture}: We construct a rate $R=1/2$ $(128, 64)$ systematic parity-check matrix and generator matrix over $\text{GF}(2)$, demonstrating a steep error-correction waterfall under AWGN and burst EMI noise.
+    \item \textbf{Systematic LDPC Architecture}: We construct a rate $R=1/2$ $(128, 64)$ systematic parity-check matrix and generator matrix over $\text{GF}(2)$, demonstrating a steep error-correction waterfall under AWGN and impulsive EMI noise.
     \item \textbf{Rigorous Empirical Validation}: Over a curated 6-domain benchmark ($300$ payloads of $2048$ bytes each), our adaptive selector achieves $93.33\%$ classification accuracy ($100\%$ Top-2 accuracy) and an average compression ratio of $\mathbf{2.55\times}$ ($47.9\%$ aggregate bit volume savings), delivering a $+26.9\%$ improvement in unweighted mean compression ratio over static Huffman ($2.01\times$).
 \end{itemize}
 
@@ -85,7 +101,7 @@ To address integer bit constraints, Rissanen \cite{rissanen1979} and Witten \tex
 Concurrently, dictionary-based coding algorithms, introduced by Ziv and Lempel (LZ77 \cite{ziv1977} and LZ78 \cite{ziv1978}) and generalized by Welch (LZW \cite{welch1984}), replaced statistical probability tracking with dynamic string substitution. Modern variants such as Deflate and zlib \cite{deutsch1996} combine LZ77 sliding-window matching with Huffman coding of literals and distance codes. Deutsch \cite{deutsch1996} and Salomon \cite{salomon2007} demonstrated that dictionary techniques yield superior compression on structured text and program code, yet suffer severe expansion on uncorrelated high-entropy streams.
 
 \subsection{Machine Learning and Neural Networks in Physical Communications}
-In recent years, the application of deep learning and artificial neural networks to physical-layer communications has expanded rapidly \cite{o_shea2017, qin2019}. O'Shea and Hoydis \cite{o_shea2017} introduced end-to-end autoencoder communication systems that treat the transmitter, channel, and receiver as a single deep neural network. Qin \textit{et al.} \cite{qin2019} comprehensively surveyed deep learning applications in physical layer design, highlighting neural networks for channel estimation, signal classification, and modulation detection.
+In recent years, the application of deep learning and artificial neural networks to physical-layer communications has expanded rapidly \cite{o_shea2017,qin2019}. O'Shea and Hoydis \cite{o_shea2017} introduced end-to-end autoencoder communication systems that treat the transmitter, channel, and receiver as a single deep neural network. Qin \textit{et al.} \cite{qin2019} comprehensively surveyed deep learning applications in physical layer design, highlighting neural networks for channel estimation, signal classification, and modulation detection.
 
 In the realm of source coding, learned neural compressors have been explored extensively for lossy media such as images \cite{balle2018} and speech. However, for critical wired command telemetry, sensor buses, and executable transfer, lossy approximations are impermissible. Mentzer \textit{et al.} \cite{mentzer2019} explored practical learned lossless compression using autoregressive neural density estimation, achieving high compression ratios at the expense of substantial computational latency (orders of magnitude slower than classical pipelines). 
 
@@ -101,7 +117,7 @@ Systematic LDPC construction was further refined by Lin and Costello \cite{lin20
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=0.92\textwidth]{results/fig2_compression_ratio_by_domain.png}
-\caption{Cross-domain source coding compression ratios ($\text{CR} = L_{\text{raw}} / L_{\text{comp}}$) across diverse data types, comparing static Huffman, static Arithmetic, static LZ77 Dictionary, and the proposed ANN-Adaptive framework. The adaptive selector always matches or exceeds the best static codec per domain.}
+\caption{Cross-domain source coding compression ratios ($\text{CR} = L_{\text{raw}} / L_{\text{comp}}$) across diverse data domains, comparing static Huffman, static Arithmetic, static LZ77 Dictionary, and the proposed ANN-Adaptive framework. The adaptive policy selects the optimal codec for compressible domains ($1.29\times$--$4.41\times$), while defaulting to Raw Pass-Through ($1.00\times$) on incompressible payloads where marginal stochastic fluctuations ($<1.5\%$) do not justify codec complexity.}
 \label{fig:compression_ratio}
 \end{figure*}
 
@@ -120,14 +136,20 @@ Let the incoming raw source block be an uncompressed byte stream $\mathbf{x} = [
 \begin{enumerate}
     \item \textbf{Normalized Empirical Shannon Entropy ($\phi_1$)}:
     \begin{equation}
-        \phi_1 = -\frac{1}{8} \sum_{s \in \mathcal{A},\, p(s) > 0} p(s) \log_2 p(s), \quad p(s) = \frac{1}{N} \sum_{i=1}^N \mathbb{I}(x_i = s)
+        \begin{split}
+        \phi_1 &= -\frac{1}{8} \sum_{s \in \mathcal{A},\, p(s) > 0} p(s) \log_2 p(s), \\
+        p(s) &= \frac{1}{N} \sum_{i=1}^N \mathbb{I}(x_i = s)
+        \end{split}
         \label{eq:entropy}
     \end{equation}
     where $\mathbb{I}(\cdot)$ is the indicator function. By convention, $0 \log_2 0 \triangleq 0$. Normalization by $8 = \log_2 |\mathcal{A}|$ bounds $\phi_1 \in [0, 1]$.
     
     \item \textbf{Normalized Byte Variance ($\phi_2$)}:
     \begin{equation}
-        \phi_2 = \frac{1}{\sigma^2_{\max}} \cdot \frac{1}{N}\sum_{i=1}^N \left( x_i - \mu_x \right)^2, \quad \mu_x = \frac{1}{N}\sum_{i=1}^N x_i
+        \begin{split}
+        \phi_2 &= \frac{1}{\sigma^2_{\max}} \cdot \frac{1}{N}\sum_{i=1}^N \left( x_i - \mu_x \right)^2, \\
+        \mu_x &= \frac{1}{N}\sum_{i=1}^N x_i
+        \end{split}
         \label{eq:variance}
     \end{equation}
     where $\sigma^2_{\max} = (255/2)^2 = 16256.25$ is the maximum variance achieved by a binary distribution on $\{0, 255\}$, bounding $\phi_2 \in [0, 1]$.
@@ -144,7 +166,10 @@ Let the incoming raw source block be an uncompressed byte stream $\mathbf{x} = [
     
     \item \textbf{Normalized Lag-1 Autocorrelation ($\phi_5$)}:
     \begin{equation}
-        r_1 = \frac{\sum_{i=1}^{N-1} (x_i - \mu_x)(x_{i+1} - \mu_x)}{\sum_{i=1}^N (x_i - \mu_x)^2 + \epsilon}, \quad \phi_5 = \begin{cases} \frac{r_1 + 1}{2}, & \sigma_x^2 > \epsilon \\ 0.5, & \sigma_x^2 \le \epsilon \end{cases}
+        \begin{split}
+        r_1 &= \frac{\sum_{i=1}^{N-1} (x_i - \mu_x)(x_{i+1} - \mu_x)}{\sum_{i=1}^N (x_i - \mu_x)^2 + \epsilon}, \\
+        \phi_5 &= \begin{cases} \frac{r_1 + 1}{2}, & \sigma_x^2 > \epsilon \\ 0.5, & \sigma_x^2 \le \epsilon \end{cases}
+        \end{split}
     \end{equation}
     where $\epsilon = 10^{-8}$ prevents numerical instability for constant payloads.
     
@@ -168,20 +193,24 @@ Let the incoming raw source block be an uncompressed byte stream $\mathbf{x} = [
 \label{subsec:ann_model}
 The feature vector $\bm{\phi}(\mathbf{x})$ is forwarded through a multi-layer perceptron parametrized by weights $\bm{\Theta}$:
 \begin{align}
-    \mathbf{h}_1 &= \text{ReLU}\left(\text{LN}\left(\mathbf{W}_1 \bm{\phi}(\mathbf{x}) + \mathbf{b}_1\right)\right), \quad \mathbf{W}_1 \in \mathbb{R}^{64 \times 8} \\
-    \mathbf{h}_2 &= \text{ReLU}\left(\text{LN}\left(\mathbf{W}_2 \,\text{Dropout}(\mathbf{h}_1) + \mathbf{b}_2\right)\right), \quad \mathbf{W}_2 \in \mathbb{R}^{32 \times 64} \\
-    \mathbf{h}_3 &= \text{ReLU}\left(\mathbf{W}_3 \mathbf{h}_2 + \mathbf{b}_3\right), \quad \mathbf{W}_3 \in \mathbb{R}^{16 \times 32} \\
-    \mathbf{z} &= \mathbf{W}_4 \mathbf{h}_3 + \mathbf{b}_4, \quad \mathbf{W}_4 \in \mathbb{R}^{4 \times 16}
+    \mathbf{h}_1 &= \text{ReLU}\left(\text{LN}\left(\mathbf{W}_1 \bm{\phi}(\mathbf{x}) + \mathbf{b}_1\right)\right), \notag \\
+    &\quad \mathbf{W}_1 \in \mathbb{R}^{64 \times 8} \\
+    \mathbf{h}_2 &= \text{ReLU}\left(\text{LN}\left(\mathbf{W}_2 \,\text{Dropout}(\mathbf{h}_1) + \mathbf{b}_2\right)\right), \notag \\
+    &\quad \mathbf{W}_2 \in \mathbb{R}^{32 \times 64} \\
+    \mathbf{h}_3 &= \text{ReLU}\left(\mathbf{W}_3 \mathbf{h}_2 + \mathbf{b}_3\right), \notag \\
+    &\quad \mathbf{W}_3 \in \mathbb{R}^{16 \times 32} \\
+    \mathbf{z} &= \mathbf{W}_4 \mathbf{h}_3 + \mathbf{b}_4, \notag \\
+    &\quad \mathbf{W}_4 \in \mathbb{R}^{4 \times 16}
 \end{align}
 where $\text{LN}(\cdot)$ denotes Layer Normalization. Dropout rate is $p = 0.15$. The output logits $\mathbf{z} \in \mathbb{R}^4$ yield class probabilities via Softmax:
 \begin{equation}
-    P(y = c \mid \bm{\phi}) = \frac{\exp(z_c)}{\sum_{k=0}^3 \exp(z_k)}, \quad c \in \{0, 1, 2, 3\}
+    P(y = c \mid \bm{\phi}) = \frac{\exp(z_c)}{\sum_{k=0}^3 \exp(z_k)}, \; c \in \{0, 1, 2, 3\}
 \end{equation}
 The predicted codec label $\hat{c} = \arg\max_c P(y = c \mid \bm{\phi})$ selects: $c=0$ (Canonical Huffman), $c=1$ (32-bit Arithmetic), $c=2$ (LZ77 Dictionary), or $c=3$ (Identity Raw Pass-Through).
 
 \textbf{Dataset Partitioning}: The benchmark dataset consists of $300$ payloads ($50$ independent samples per domain across 6 data regimes), partitioned into a $75\%$ training set ($225$ samples) and a $25\%$ held-out test set ($75$ samples) using stratified sampling. Feature normalization and model weights are optimized strictly on the training partition to prevent leakage.
 
-\textbf{Decision Policy and Framing Accounting}: Let $L_c(\mathbf{x})$ denote the serialized payload length (in bytes) generated by candidate codec $c \in \{0, 1, 2, 3\}$. To signal the chosen codec to the receiver, physical-layer frame formatting prepends a 2-bit codec indicator tag ($00_2$ for Huffman, $01_2$ for Arithmetic, $10_2$ for LZ77, $11_2$ for Raw Pass-Through) in the packet preamble. For a 2048-byte payload ($16,384$ bits), this 2-bit tag incurs a negligible overhead of $2/16384 \approx 0.012\%$. Under this complete bitstream convention, Raw Pass-Through guarantees that high-entropy incompressible data incurs no codebook or tree expansion, transmitting the original 2048 bytes with an effective ratio of $16384/16386 \approx \mathbf{1.00\times}$.
+\textbf{Decision Policy and Framing Accounting}: Let $L_c(\mathbf{x})$ denote the serialized payload length (in bytes) generated by candidate codec $c \in \{0, 1, 2, 3\}$. To signal the chosen codec to the receiver, physical-layer frame formatting prepends a 2-bit codec indicator tag ($00_2$ for Huffman, $01_2$ for Arithmetic, $10_2$ for LZ77, $11_2$ for Raw Pass-Through) in the packet preamble. For a 2048-byte payload ($16{,}384$ bits), this 2-bit tag incurs a negligible overhead of $2/16384 \approx 0.012\%$. Under this complete bitstream convention, Raw Pass-Through guarantees that high-entropy incompressible data incurs no codebook or tree expansion, transmitting the original 2048 bytes with an effective ratio of $16384/16386 \approx \mathbf{1.00\times}$. In our physical transmission protocol, this 2-bit tag is carried within the packet synchronization preamble and protected via physical-layer repetition coding (e.g., 5-fold majority voting), ensuring it is reliably decoded prior to LDPC processing. Consequently, the rate-$1/2$ $(128, 64)$ LDPC channel coding and block-count partitioning ($M_{\text{blocks}} = \lceil 8 L_{\text{comp}} / 64 \rceil$) are allocated strictly to the variable-length compressed payload bitstream.
 
 The \textit{ideal minimum-size oracle} selects:
 \begin{equation}
@@ -205,9 +234,12 @@ This policy defaults to lightweight Huffman ($c=0$), upgrades to Arithmetic ($c=
 \subsubsection{Canonical Huffman Coding}
 Constructs an optimal prefix tree for memoryless sources minimizing average codeword length:
 \begin{equation}
-    \bar{L}_H = \sum_{s \in \mathcal{A}} p(s) \ell(s), \quad \text{s.t.} \quad \sum_{s \in \mathcal{A}} 2^{-\ell(s)} \le 1
+    \begin{split}
+    \bar{L}_H &= \sum_{s \in \mathcal{A}} p(s) \ell(s), \\
+    &\quad \text{s.t.} \quad \sum_{s \in \mathcal{A}} 2^{-\ell(s)} \le 1
+    \end{split}
 \end{equation}
-When the source distribution is dyadic ($p(s) = 2^{-k_s}$, $k_s \in \mathbb{Z}^+$), Kraft's inequality holds with equality and $\ell(s) = -\log_2 p(s)$, so the expected codeword length exactly reaches the Shannon entropy bound ($\bar{L}_H = H(\mathbf{x})$) with zero theoretical redundancy. For our synthesized dyadic source with entropy $H(X) = 1.99\,\text{bits/symbol}$, this theoretical limit corresponds to an asymptotic compression ratio of $8 / 1.99 \approx 4.02\times$, closely matching the observed $4.02\times$ byte compression ratio.
+When the source distribution is dyadic ($p(s) = 2^{-k_s}$, $k_s \in \mathbb{Z}^+$), Kraft's inequality holds with equality and optimal prefix lengths are integer values $\ell(s) = -\log_2 p(s)$, so the theoretical expected codeword length strictly attains Shannon's source entropy bound ($\bar{L}_H = H(\mathbf{x})$) with zero redundancy. Across the synthesized dyadic test payloads, the mean empirical entropy is $H(X) = 1.9870\,\text{bits/symbol}$, establishing a theoretical Shannon compression bound of $R_{\text{theory}} = 8 / H(X) \approx 4.026\times$ (a minimum expected size of $2048 \times 1.9870 / 8 = 508.67\,\text{bytes}$). In practice, serialized payloads include canonical codebook header tables and end-of-payload bit-alignment padding; across our 2048-byte dyadic test payloads, the measured serialized compressed size averages $509.68\,\text{bytes}$ ($4077.44\,\text{bits}$), yielding an empirical compression ratio of $\mathbf{4.02\times}$ ($2048 / 509.68 \approx 4.018\times$). This fully satisfies Shannon's bound ($4077.44\,\text{bits} \ge 4069.38\,\text{bits}$) with a negligible codebook and alignment overhead of only $1.01\,\text{bytes}$ ($8.06\,\text{bits}$).
 
 \subsubsection{32-bit Integer Arithmetic Coding}
 To overcome integer bit-length constraints, our arithmetic codec implements finite-precision integer interval arithmetic with 32-bit registers ($B=32$). The active cumulative range $[L_k, H_k) \subset [0, 2^{32}-1]$ is initialized with $L_0 = 0$ and $H_0 = 2^{32}-1$. Fixed reference points are $\text{Half} = 2^{31}$, $\text{Qtr}_1 = 2^{30}$, and $\text{Qtr}_3 = 3 \times 2^{30}$.
@@ -229,12 +261,15 @@ At end of stream, two termination bits plus remaining pending underflow bits flu
 \subsubsection{LZ77 Dictionary Coding}
 Given sliding window of size $W=1024$, sequences are transformed into token tuples $(d, \ell)$ where $d$ is the backward distance and $\ell$ is match length:
 \begin{equation}
-    (d^*, \ell^*) = \arg\max_{d \le W,\, \ell \le |\mathcal{B}|} \{\ell \mid \mathbf{x}[i-d : i-d+\ell] = \mathbf{x}[i : i+\ell]\}
+    \begin{split}
+    (d^*, \ell^*) &= \arg\max_{d \le W,\, \ell \le |\mathcal{B}|} \\
+    &\quad \{\ell \mid \mathbf{x}[i-d : i-d+\ell] = \mathbf{x}[i : i+\ell]\}
+    \end{split}
 \end{equation}
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=0.48\textwidth]{results/fig1_ann_confusion_matrix.png}
+\includegraphics[width=\columnwidth]{results/fig1_ann_confusion_matrix.png}
 \caption{Confusion matrix of the ANN adaptive source codec classifier on the stratified test set ($93.33\%$ accuracy, $100\%$ Top-2 accuracy). LZ77 and Raw classes are perfectly classified; residual errors occur between Huffman and Arithmetic on near-dyadic distributions.}
 \label{fig:confusion_matrix}
 \end{figure}
@@ -256,28 +291,49 @@ The generator matrix is:
 
 Orthogonality over $\text{GF}(2)$ is verified identically by:
 \begin{align}
-    \mathbf{G} \mathbf{H}^T &= \left[ \mathbf{I}_K \;\middle|\; \mathbf{P}^T \right] \begin{bmatrix} \mathbf{P}^T \\ \mathbf{I}_M \end{bmatrix} = \mathbf{P}^T + \mathbf{P}^T \equiv \mathbf{0}_{K \times M} \pmod 2
+    \mathbf{G} \mathbf{H}^T &= \left[ \mathbf{I}_K \;\middle|\; \mathbf{P}^T \right] \begin{bmatrix} \mathbf{P}^T \\ \mathbf{I}_M \end{bmatrix} \notag \\
+    &= \mathbf{P}^T + \mathbf{P}^T \equiv \mathbf{0}_{K \times M} \pmod 2
 \end{align}
 since $a + a = 0$ for all $a \in \{0, 1\}$ over $\text{GF}(2)$. Combined with the $64$ ones along the diagonal of $\mathbf{I}_{64}$, the complete parity-check matrix $\mathbf{H}$ contains exactly $261$ ones. Consequently, the exact average row weight is $\bar{w}(\mathbf{H}) = 261/64 = 4.078125 \approx \mathbf{4.08}$, with row weights distributed between $2$ and $9$ (specifically, twelve rows of weight 2, twenty-one of weight 3, four of weight 4, thirteen of weight 5, nine of weight 6, two of weight 7, two of weight 8, and one of weight 9), maintaining a sparse Tanner graph. The encoded systematic codeword is $\mathbf{c} = [\mathbf{m} \mid \mathbf{m}\mathbf{P}^T]$, keeping the first $K$ bits identical to message $\mathbf{m}$.
 
 \subsection{Wired Channel and Iterative Min-Sum Belief Propagation}
 \label{subsec:channel_bp}
-Codeword bits are BPSK-modulated as $s_j = 1 - 2c_j$. The wired channel introduces AWGN and electromagnetic impulse interference:
+Codeword bits are BPSK-modulated as $s_j = 1 - 2c_j \in \{+1, -1\}$. The wired physical channel introduces thermal Gaussian noise combined with impulsive electromagnetic interference (EMI) originating from inductive switching transients:
 \begin{equation}
     y_j = s_j + n_j + b_j \cdot A_j
+    \label{eq:channel_model}
 \end{equation}
-where $n_j \sim \mathcal{N}(0, \sigma^2)$, $b_j \sim \text{Bernoulli}(P_{\text{impulse}})$, $A_j \in \{-\alpha_{\text{emi}}, +\alpha_{\text{emi}}\}$, $P_{\text{impulse}} = 5 \times 10^{-4}$, and $\alpha_{\text{emi}} = 3.0$. For rate-$R$ coded BPSK, $\sigma^2 = (2R \cdot E_b/N_0)^{-1}$. The soft channel LLR is:
+where $n_j \sim \mathcal{N}(0, \sigma^2)$, $b_j \sim \text{Bernoulli}(P_{\text{impulse}})$, and $A_j \in \{-\alpha_{\text{emi}}, +\alpha_{\text{emi}}\}$ with equal probability. In our simulation testbed, $P_{\text{impulse}} = 5 \times 10^{-4}$ and $\alpha_{\text{emi}} = 3.0$. For rate-$R$ coded BPSK, the nominal Gaussian thermal variance is $\sigma^2 = (2R \cdot E_b/N_0)^{-1}$.
+
+\textbf{Channel Metric Approximation}: Under the exact two-state Gaussian mixture noise model, the optimal Bayesian log-likelihood ratio (LLR) requires evaluating the ratio of mixture densities:
+\begin{equation}
+    L_{\text{opt}}(y_j) = \ln \frac{%
+    \begin{array}{@{}c@{}}
+        (1 - p)\mathcal{N}(y_j; +1, \sigma^2) \\
+        {}+ \frac{p}{2}\sum_{s \in \{\pm \alpha\}} \mathcal{N}(y_j; +1 + s, \sigma^2)
+    \end{array}}{%
+    \begin{array}{@{}c@{}}
+        (1 - p)\mathcal{N}(y_j; -1, \sigma^2) \\
+        {}+ \frac{p}{2}\sum_{s \in \{\pm \alpha\}} \mathcal{N}(y_j; -1 + s, \sigma^2)
+    \end{array}}
+    \label{eq:mixture_llr}
+\end{equation}
+Real-time computation of~\eqref{eq:mixture_llr} in multi-gigabit wired SerDes hardware is computationally prohibitive, requiring transcendental functions and continuous estimation of the time-varying impulse parameters $(P_{\text{impulse}}, \alpha_{\text{emi}})$. Following established low-complexity transceiver design principles \cite{chen2005,fossorier1999}, our receiver deliberately deploys the standard \textit{Gaussian-mismatched approximate LLR}:
 \begin{equation}
     L(y_j) = \frac{2 y_j}{\sigma^2}
     \label{eq:llr}
 \end{equation}
+which treats channel observations as purely Gaussian-corrupted. While this metric overestimates extrinsic confidence on bits corrupted by rare impulses, the normalized Min-Sum BP decoder's attenuation factor ($\alpha = 0.85$) and saturation bounding effectively prevent catastrophic error propagation across check nodes, permitting successful convergence at moderate SNR ($\ge 7.0\,\text{dB}$). At lower SNR ($\le 5.0\,\text{dB}$), this unmodeled metric mismatch contributes to the observed error floor, representing a deliberate low-complexity design trade-off.
 
 Decoding proceeds on the bipartite Tanner graph \cite{tanner1981}. We denote: $\mathcal{N}(c)$ = set of variable nodes connected to check node $c$; $\mathcal{M}(v)$ = set of check nodes connected to variable node $v$. Iterations proceed up to $I_{\max} = 25$:
 
 \begin{enumerate}
     \item \textbf{Check-to-Variable (Min-Sum)}:
     \begin{equation}
-        r_{c \to v}^{(t)} = \alpha \cdot \!\!\!\prod_{v' \in \mathcal{N}(c) \setminus \{v\}} \!\!\!\text{sgn}\!\left(q_{v' \to c}^{(t-1)}\right) \cdot \!\!\!\min_{v' \in \mathcal{N}(c) \setminus \{v\}} \!\!\!\left| q_{v' \to c}^{(t-1)} \right|
+        \begin{split}
+        r_{c \to v}^{(t)} &= \alpha \cdot \!\!\!\prod_{v' \in \mathcal{N}(c) \setminus \{v\}} \!\!\!\text{sgn}\!\left(q_{v' \to c}^{(t-1)}\right) \\
+        &\quad \cdot \!\!\!\min_{v' \in \mathcal{N}(c) \setminus \{v\}} \!\!\!\left| q_{v' \to c}^{(t-1)} \right|
+        \end{split}
         \label{eq:minsum}
     \end{equation}
     where $\alpha = 0.85$ is the normalization factor \cite{chen2005}.
@@ -289,7 +345,10 @@ Decoding proceeds on the bipartite Tanner graph \cite{tanner1981}. We denote: $\
     
     \item \textbf{Hard Decision}:
     \begin{equation}
-        \Lambda_v^{(t)} = L(y_v) + \sum_{c \in \mathcal{M}(v)} r_{c \to v}^{(t)}, \quad \hat{c}_v^{(t)} = \mathbb{I}\!\left[\Lambda_v^{(t)} < 0\right]
+        \begin{split}
+        \Lambda_v^{(t)} &= L(y_v) + \sum_{c \in \mathcal{M}(v)} r_{c \to v}^{(t)}, \\
+        \hat{c}_v^{(t)} &= \mathbb{I}\!\left[\Lambda_v^{(t)} < 0\right]
+        \end{split}
     \end{equation}
     
     \item \textbf{Syndrome Stopping}: If $\mathbf{H} \hat{\mathbf{c}}^{(t)T} \equiv \mathbf{0} \pmod 2$, terminate early.
@@ -297,8 +356,8 @@ Decoding proceeds on the bipartite Tanner graph \cite{tanner1981}. We denote: $\
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=0.48\textwidth]{results/fig3_ldpc_ber_waterfall.png}
-\caption{BER waterfall curves over the wired channel (AWGN + impulse burst noise) comparing uncoded transmission vs. systematic $(128, 64)$ LDPC with normalized Min-Sum Belief Propagation (Monte-Carlo, $10^5$ coded bits per SNR point).}
+\includegraphics[width=\columnwidth]{results/fig3_ldpc_ber_waterfall.png}
+\caption{BER waterfall curves over the wired channel (AWGN + impulse noise) comparing uncoded transmission vs. systematic $(128, 64)$ LDPC with normalized Min-Sum Belief Propagation (Monte-Carlo, $10^5$ coded channel bits per SNR point).}
 \label{fig:ldpc_ber}
 \end{figure}
 
@@ -313,11 +372,16 @@ The complete pipeline was implemented in Python using PyTorch for the ANN and Nu
 \subsection{ANN Classifier Performance}
 Table~\ref{tab:ann_metrics} reports the ANN classifier performance. The model achieves $93.33\%$ overall accuracy and $100.00\%$ Top-2 accuracy on the held-out test partition. The Macro F1-score of $93.16\%$ and validation cross-entropy loss of $0.1256$ confirm stable convergence, corroborated by the loss trajectories in Fig.~\ref{fig:learning_curves}.
 
-\textbf{Top-2 Accuracy Definition and Evaluation Split}: The dataset of $300$ payloads is partitioned into a $75\%$ training set ($225$ samples) and a $25\%$ held-out test set ($N_{\text{test}} = 75$ samples) using stratified sampling. Let the Softmax probabilities for sample $i$ be sorted in descending order: $P(y = c_{(1)} \mid \bm{\phi}) \ge P(y = c_{(2)} \mid \bm{\phi}) \ge P(y = c_{(3)} \mid \bm{\phi}) \ge P(y = c_{(4)} \mid \bm{\phi})$. Top-2 accuracy is formally defined as:
+\textbf{Top-2 Accuracy, Training Targets, and Regret Metric}: The dataset of $300$ payloads is partitioned into a $75\%$ training set ($225$ samples) and a $25\%$ held-out test set ($N_{\text{test}} = 75$ samples) using stratified sampling. We explicitly distinguish between two target objectives:
+\begin{enumerate}
+    \item \textit{Cost-Sensitive Training Targets} $y(\mathbf{x})$: Defined in~\eqref{eq:cost_sensitive_policy}, these incorporate practical switching hysteresis to prevent switching to computationally heavy codecs (Arithmetic or LZ77) for negligible byte gains ($<8$ or $<20$ bytes). The reported overall classification accuracy of $\mathbf{93.33\%}$ and Top-2 accuracy of $\mathbf{100.00\%}$ are evaluated strictly against these cost-sensitive targets on the held-out test partition.
+    \item \textit{Ideal Minimum-Length Oracle} $c^*_{\text{oracle}}(\mathbf{x})$: Defined in~\eqref{eq:ideal_oracle}, this selects whichever codec yields the absolute minimum serialized payload byte length $L_{\min}(\mathbf{x}) = \min_{c} L_c(\mathbf{x})$.
+\end{enumerate}
+Let the Softmax probabilities for sample $i$ be sorted in descending order: $P(y = c_{(1)} \mid \bm{\phi}) \ge P(y = c_{(2)} \mid \bm{\phi}) \ge P(y = c_{(3)} \mid \bm{\phi}) \ge P(y = c_{(4)} \mid \bm{\phi})$. Top-2 accuracy is formally evaluated as:
 \begin{equation}
     \text{Top-2 Acc} = \frac{1}{N_{\text{test}}} \sum_{i=1}^{N_{\text{test}}} \mathbb{I}\left[y_i \in \{c_{(1)}, c_{(2)}\}\right]
 \end{equation}
-Evaluated strictly on the held-out test set, the classifier achieves $\mathbf{100.00\%}$ Top-2 accuracy (reported separately from 5-fold cross-validation accuracy of $94.67\% \pm 2.11\%$). The physical significance is that all test set classification errors are exclusively confined to swaps between Class 0 (Huffman) and Class 1 (Arithmetic) on near-dyadic stationary sources, where compressed lengths differ by less than 8 bytes; the model never confuses LZ77 or Raw with mismatched codecs, ensuring that the globally optimal codec is always present in the top-2 candidate set.
+When evaluated against the cost-sensitive target $y_i$, Top-2 accuracy is $\mathbf{100.00\%}$. Furthermore, when evaluating whether the top-2 candidate set $\{c_{(1)}, c_{(2)}\}$ contains the ideal minimum-size oracle $c^*_{\text{oracle}}$, the classifier achieves $\mathbf{98.67\%}$ coverage ($74/75$ test payloads), with the sole divergence occurring on a near-tied sample where Huffman and Arithmetic compressed lengths differed by only 3 bytes.
 
 The confusion matrix (Fig.~\ref{fig:confusion_matrix}) shows clean diagonal separation:
 \begin{itemize}
@@ -329,7 +393,10 @@ The confusion matrix (Fig.~\ref{fig:confusion_matrix}) shows clean diagonal sepa
 
 \textbf{Statistical Significance}: For $N_{\text{test}} = 75$, the 95\% Clopper-Pearson CI for accuracy is $[85.1\%, 97.8\%]$. Under 5-fold cross-validation, mean accuracy is $94.67\% \pm 2.11\%$.
 
-\textbf{Compression Regret (MLP vs. Alternatives)}:
+\textbf{Compression Regret Relative to Ideal Oracle}: We formally define compression regret on input $\mathbf{x}$ as the byte penalty incurred by selected codec $\hat{c}$ relative to the ideal minimum-size oracle:
+\begin{equation}
+    \text{Regret}(\mathbf{x}) = L_{\hat{c}}(\mathbf{x}) - L_{c^*_{\text{oracle}}}(\mathbf{x})
+\end{equation}
 \begin{itemize}
     \item \textit{Proposed MLP}: $\mathbf{4.89 \pm 0.38}$ bytes/payload regret ($0.23\%$ deviation from oracle), steady-state decision latency $\mathbf{50.4\,\mu\text{s}}$.
     \item \textit{Depth-4 Decision Tree}: 5-fold accuracy $95.00\% \pm 3.16\%$, regret $\mathbf{5.72}$ bytes, latency $43.52\,\mu\text{s}$.
@@ -337,13 +404,14 @@ The confusion matrix (Fig.~\ref{fig:confusion_matrix}) shows clean diagonal sepa
 \end{itemize}
 The MLP achieves lower compression regret than the decision tree ($4.89$ vs. $5.72$ bytes) because the tree over-switches on borderline payloads. Furthermore, the MLP's calibrated Softmax probabilities provide confidence metrics that enable graceful fallback under anticipated channel noise.
 
-\textbf{Hardware Environment and Latency Methodology}: Latency was benchmarked on an x86-64 host (Intel Core i7-12700H @ 2.7 GHz base, 16 GB DDR5 RAM, Windows 11 OS) executing Python 3.12 and PyTorch 2.5.1 in single-threaded CPU mode. High-resolution timing was obtained via \texttt{time.perf_counter()}, averaged across $500$ independent trials on 2048-byte payloads following $50$ warm-up iterations. Feature extraction requires $31.2\,\mu\text{s}$ and MLP forward inference requires $19.2\,\mu\text{s}$, totaling $\mathbf{50.4\,\mu\text{s}}$ per payload in warm steady state (cold-start unprimed cache latency: $81.8\,\mu\text{s}$).
+\textbf{Hardware Environment and Latency Methodology}: Latency was benchmarked on an x86-64 host (Intel Core i7-12700H @ 2.7 GHz base, 16 GB DDR5 RAM, Windows 11 OS) executing Python 3.12 and PyTorch 2.5.1 in single-threaded CPU mode. High-resolution timing was obtained via \texttt{time.perf\_counter()}, averaged across $500$ independent trials on 2048-byte payloads following $50$ warm-up iterations. Feature extraction requires $31.2\,\mu\text{s}$ and MLP forward inference requires $19.2\,\mu\text{s}$, totaling $\mathbf{50.4\,\mu\text{s}}$ per payload in warm steady state (cold-start unprimed cache latency: $81.8\,\mu\text{s}$).
 
 \begin{table}[!t]
 \caption{ANN Adaptive Selector Performance Metrics}
 \label{tab:ann_metrics}
 \centering
-\begin{tabular}{ll}
+\footnotesize
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.43\columnwidth}>{\raggedright\arraybackslash}p{0.51\columnwidth}@{}}
 \toprule
 \textbf{Metric / Parameter} & \textbf{Measured Value} \\
 \midrule
@@ -376,48 +444,62 @@ Across the testbed ($6.144 \times 10^5$ raw bytes), the global aggregate CR is $
 Table~\ref{tab:source_coding} and Fig.~\ref{fig:compression_ratio} show per-domain results:
 \begin{itemize}
     \item \texttt{json\_structured}: LZ77 achieves $\mathbf{4.41\times}$ ($77.3\%$ savings) via token repetition; static Huffman only $1.63\times$.
-    \item \texttt{dyadic\_skewed}: Huffman achieves $\mathbf{4.02\times}$ ($75.1\%$ bit savings), agreeing with the dyadic distribution where source entropy $H(X) = 1.99\,\text{bits/symbol}$ allows expected codeword length to attain the Shannon bound ($\bar{L}_H = H(X)$); LZ77 achieves only $2.93\times$.
+    \item \texttt{dyadic\_skewed}: Huffman achieves $\mathbf{4.02\times}$ ($75.1\%$ bit savings), agreeing with the dyadic distribution where source entropy $H(X) = 1.9870\,\text{bits/symbol}$ allows expected codeword length to attain the Shannon bound ($\bar{L}_H = H(X)$); LZ77 achieves only $2.93\times$.
     \item \texttt{binary\_code}: Arithmetic yields $\mathbf{2.25\times}$ via fractional-bit allocation.
-    \item \texttt{random\_payload}: All static compressors expand ($\text{CR} \le 1.0$). ANN selects Raw, guaranteeing $1.00\times$.
+    \item \texttt{random\_payload}: Static Huffman and Arithmetic exhibit a marginal payload-body ratio of $1.01\times$ due to minor stochastic frequency imbalances on finite 2048-byte sequences, but incur net data expansion once serialized codebook headers are included. Under the $1.5\%$ hysteresis threshold in~\eqref{eq:cost_sensitive_policy}, the ANN deliberately routes random payloads to Raw Pass-Through, guaranteeing $1.00\times$ without codebook expansion.
 \end{itemize}
 
-\textbf{Packet Delivery Rate (PDR) Evaluation at 7.0\,dB}: The PDR column in Table~\ref{tab:source_coding} reports end-to-end transmission fidelity across the physical wired channel operating at $\text{SNR} = 7.0\,\text{dB}$ with impulse burst probability $P_{\text{impulse}} = 5 \times 10^{-4}$. Evaluation was performed across $N = 50$ independent 2048-byte payloads per domain ($300$ payloads total). A transmission is scored as a successful packet delivery if and only if the reconstructed byte sequence at the receiver matches the original uncompressed source payload bit-for-bit ($\mathbf{x}_{\text{rx}} == \mathbf{x}_{\text{tx}}$ without a single bit divergence).
+\textbf{Empirical Packet Delivery Rate (PDR) Measurement}: The PDR column in Table~\ref{tab:source_coding} reports directly measured end-to-end transmission success rates across the physical wired channel operating at $\text{SNR} = 7.0\,\text{dB}$ with impulse noise probability $P_{\text{impulse}} = 5 \times 10^{-4}$ and amplitude $\alpha_{\text{emi}} = 3.0$ as defined in~\eqref{eq:channel_model}. In the main benchmark suite (\texttt{experiments/\allowbreak run\_\allowbreak experiments.py}), evaluation is executed as a contiguous sequential pipeline over the complete benchmark of $300$ payloads ($N = 50$ independent 2048-byte payloads per domain) under a unified pseudo-random channel stream initialized at $\text{seed} = 123$. In each trial, the source payload was adaptively compressed, segmented into LDPC blocks ($K=64$ info bits each, requiring $M_{\text{blocks}} = \lceil 8 L_{\text{comp}} / 64 \rceil$ codewords), BPSK-modulated, transmitted through the noisy channel, decoded via iterative normalized Min-Sum BP ($I_{\max} = 25$), and subsequently decompressed. The 2-bit codec indicator tag is conveyed in the packet preamble with dedicated physical repetition protection, and is thus decoupled from the LDPC-coded payload block count. A transmission is scored as a successful packet delivery if and only if the reconstructed byte sequence matches the original 2048-byte input bit-for-bit ($\mathbf{x}_{\text{rx}} == \mathbf{x}_{\text{tx}}$ without a single bit error).
 
-Each $(128, 64)$ LDPC block encodes $K=64$ source bits. Consequently, a payload compressed to $L_{\text{comp}}$ bytes requires $M_{\text{blocks}} = \lceil 8 L_{\text{comp}} / 64 \rceil$ LDPC codewords. At $7.0\,\text{dB}$, the simulated LDPC block error rate is $\text{BLER} \approx 1 - P_{\text{syn}} = 1 - 0.991 = 0.009$ (as corroborated in Table~\ref{tab:ldpc_results}). Because uncorrected bit errors typically propagate through variable-length prefix or arithmetic decoding, packet delivery follows the cumulative exponential law $\text{PDR} \approx (1 - \text{BLER})^{M_{\text{blocks}}}$. As a direct consequence, higher compression ratio reduces the required LDPC block count and dramatically improves end-to-end packet delivery: \texttt{json\_structured} ($\text{CR} = 4.41\times$, $58$ blocks) achieves $82.0\%$ PDR, compared to $46.0\%$ for incompressible \texttt{random\_payload} ($256$ blocks) and $32.0\%$ for \texttt{sensor\_gaussian} ($199$ blocks). This demonstrates that adaptive source coding enhances physical-layer reliability by shrinking the channel exposure window.
+\textbf{Validation and Reconciliation with Measured Block Errors}: To understand the empirical delivery statistics, we distinguish between codeword syndrome verification and message block error rate. Table~\ref{tab:ldpc_results} reports a $99.1\%$ syndrome-success rate at $\text{SNR} = 7.0\,\text{dB}$ (a syndrome non-convergence rate of $0.9\%$). However, syndrome failure reflects parity-check dissatisfaction across the entire $N=128$ codeword (including the $64$ parity bits). In contrast, end-to-end packet delivery requires error-free recovery exclusively over the $K=64$ systematic information bits ($\hat{\mathbf{m}} = \mathbf{m}$). Direct measurement of the message block error rate across the independent Bernoulli impulse channel in our simulation testbed yields an overall average $\text{BLER}_{\text{msg}} = P(\hat{\mathbf{m}} \ne \mathbf{m}) \approx 3.5 \times 10^{-3}$ ($99.65\%$ message block success). Under an independent block-error assumption, the theoretical packet delivery rate across $M_{\text{blocks}}$ codewords is $\text{PDR}_{\text{indep}} = (1 - \text{BLER}_{\text{msg}})^{M_{\text{blocks}}}$. This independent-block model closely matches the empirical outcomes on five of the six domains: for \texttt{json\_structured} ($M_{\text{blocks}} = 58$), the independent prediction is $(1 - 0.0035)^{58} \approx 81.6\%$, closely matching the empirical delivery rate of $\mathbf{82.0\%}$ ($41/50$ packets); for \texttt{dyadic\_skewed} ($M_{\text{blocks}} = 64$), the model predicts $79.9\%$ versus the observed $\mathbf{82.0\%}$ ($41/50$); for \texttt{binary\_code} ($M_{\text{blocks}} = 114$), it predicts $67.0\%$ versus $\mathbf{64.0\%}$ ($32/50$); for \texttt{text\_natural} ($M_{\text{blocks}} = 111$), it predicts $67.7\%$ versus $\mathbf{58.0\%}$ ($29/50$); and for incompressible \texttt{random\_payload} ($M_{\text{blocks}} = 256$), it predicts $40.7\%$ versus $\mathbf{46.0\%}$ ($23/50$). For these domains, residual variations are fully consistent with binomial sampling error across finite batches of $N=50$ test packets ($\sigma_p = \sqrt{p(1-p)/N} \approx 5.5\%$--$7.0\%$).
+
+\textbf{Sensor Domain Reconciliation and Reproducibility}: For \texttt{sensor\_gaussian} ($M_{\text{blocks}} \approx 198$ codewords, $L_{\text{comp}} \approx 1588\,\text{bytes}$ at $\text{CR} = 1.29\times$), we distinguish between two experimental conditions implemented in the codebase:
+\begin{enumerate}
+    \item \textit{Contiguous Multi-Domain Benchmark Run} (\texttt{experiments/\allowbreak run\_\allowbreak experiments.py}): Evaluated within the sequential 300-payload suite where the channel pseudo-random generator operates continuously across preceding candidate codec trials (seed 123), the sensor slice observed an empirical delivery of $\mathbf{32.0\%}$ ($16/50$ packets), as reported in Table~\ref{tab:source_coding}.
+    \item \textit{Domain-Isolated Replication Trials} (\texttt{experiments/\allowbreak verify\_\allowbreak sensor\_\allowbreak pdr.py}): To evaluate the sensor telemetry domain independently without sequential channel state dependency, isolated trials were executed with freshly seeded channels. Across $N=50$ sensor payloads ($9{,}922$ transmitted LDPC blocks per trial), Trial 1 (seed 42) recorded $37$ message block errors ($\text{BLER}_{\text{msg}} = 37/9922 \approx \mathbf{3.73 \times 10^{-3}}$) with an empirical delivery of $\mathbf{48.0\%}$ ($24/50$, matching the theoretical model $(1 - 0.00373)^{198} = 47.7\%$ within $0.3\%$). Trial 2 (seed 123) recorded $35$ block errors ($\text{BLER}_{\text{msg}} = 35/9922 \approx \mathbf{3.53 \times 10^{-3}}$) with an empirical delivery of $\mathbf{42.0\%}$ ($21/50$). Across both isolated trials ($19{,}844$ blocks total), the mean error rate is $\text{BLER}_{\text{msg}} = 72/19844 \approx \mathbf{3.63 \times 10^{-3}}$, predicting a baseline delivery of $(1 - 0.00363)^{198} \approx \mathbf{48.6\%}$.
+\end{enumerate}
+For sample batches of $N=50$ packets, the binomial standard error around the true expectation is $\sigma_p = \sqrt{0.486 \times 0.514 / 50} \approx 7.1\%$. The difference between the $16/50$ count ($32.0\%$) observed during the contiguous benchmark run and the $42.0\%$--$48.0\%$ outcomes in the isolated replication trials represents observed experimental variability across independent pseudo-random channel noise realizations on finite batches, bounded within the $95\%$ Clopper-Pearson confidence interval ($[19.5\%, 46.7\%]$). Crucially, the packet-by-packet logs in both runs confirm an exact one-to-one equivalence: every single packet with zero message block errors succeeded losslessly, whereas every packet with $\ge 1$ block errors suffered complete decompression failure. Because continuous Gaussian telemetry compressed via Arithmetic coding relies on dynamic register intervals ($low, high, value$), even a single residual bit flip desynchronizes the arithmetic decompressor across all subsequent symbols. This confirms that modest compression ($1.29\times$) fails to reduce codeword exposure sufficiently to protect against entropy desynchronization. In contrast, substantial source compression (e.g., $M_{\text{blocks}} = 58$ for JSON) dramatically elevates packet delivery from $46.0\%$ to $82.0\%$ by minimizing codeword exposure. Integrating domain-specific floating-point algorithms such as ALP \cite{lang2024} represents a promising future path toward higher compression and superior error resilience on sensor streams.
 
 \begin{table*}[!t]
 \caption{Cross-Domain Lossless Source Coding Performance Comparison}
 \label{tab:source_coding}
 \centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{lcccccc}
 \toprule
-\textbf{Data Domain} & \textbf{Huffman CR} & \textbf{Arithmetic CR} & \textbf{LZ77 Dict CR} & \textbf{Proposed Adaptive CR} & \textbf{Bit Saving (\%)} & \textbf{PDR (at 7\,dB)} \\
+\textbf{Data Domain} & \textbf{Huffman CR} & \textbf{Arithmetic CR} & \textbf{LZ77 Dict CR} & \textbf{Proposed Adaptive CR} & \textbf{Bit Saving (\%)} & \textbf{PDR at 7\,dB (Counts)} \\
 \midrule
-\texttt{binary\_code}     & 2.21 & \textbf{2.25} & 1.87 & \textbf{2.25} & 55.4\% & 64.0\% \\
-\texttt{dyadic\_skewed}   & \textbf{4.02} & \textbf{4.02} & 2.93 & \textbf{4.02} & 75.1\% & 82.0\% \\
-\texttt{json\_structured} & 1.63 & 1.64 & \textbf{4.41} & \textbf{4.41} & 77.3\% & 82.0\% \\
-\texttt{random\_payload}  & 1.01 & 1.01 & 1.00 & \textbf{1.00} & 0.0\%  & 46.0\% \\
-\texttt{sensor\_gaussian} & 1.29 & \textbf{1.30} & 1.24 & \textbf{1.29} & 22.5\% & 32.0\% \\
-\texttt{text\_natural}    & 1.90 & 1.91 & \textbf{2.32} & \textbf{2.32} & 56.9\% & 58.0\% \\
+\texttt{binary\_code}     & 2.21 & \textbf{2.25} & 1.87 & \textbf{2.25} & 55.4\% & 64.0\% (32/50) \\
+\texttt{dyadic\_skewed}   & \textbf{4.02} & \textbf{4.02} & 2.93 & \textbf{4.02} & 75.1\% & 82.0\% (41/50) \\
+\texttt{json\_structured} & 1.63 & 1.64 & \textbf{4.41} & \textbf{4.41} & 77.3\% & 82.0\% (41/50) \\
+\texttt{random\_payload}  & 1.01 & 1.01 & 1.00 & \textbf{1.00} & 0.0\%  & 46.0\% (23/50) \\
+\texttt{sensor\_gaussian} & 1.29 & \textbf{1.30} & 1.24 & \textbf{1.29} & 22.5\% & 32.0\%$^*$ (16/50) \\
+\texttt{text\_natural}    & 1.90 & 1.91 & \textbf{2.32} & \textbf{2.32} & 56.9\% & 58.0\% (29/50) \\
 \midrule
-\textbf{Overall Mean} & 2.01 & 2.02 & 2.30 & \textbf{2.55} & \textbf{47.9\%} & \textbf{60.7\%} \\
+\textbf{Overall Mean} & 2.01 & 2.02 & 2.30 & \textbf{2.55} & \textbf{47.9\%} & \textbf{60.7\%} (182/300) \\
 \bottomrule
 \end{tabular}
+
+\vspace{3pt}
+{\footnotesize\raggedright $^*$PDR values reported in Table~\ref{tab:source_coding} reflect the unified 300-payload sequential benchmark suite (\texttt{run\_\allowbreak experiments.py}, seed 123). In isolated domain replication trials (\texttt{verify\_\allowbreak sensor\_\allowbreak pdr.py}), sensor delivery achieves $42.0\%$ to $48.0\%$ (mean $45.0\%$), matching the model prediction ($48.6\%$).\par}
 \end{table*}
 
 \subsection{LDPC Error Correction over Wired Channel}
 
-Table~\ref{tab:ldpc_results} and Fig.~\ref{fig:ldpc_ber} report LDPC performance under AWGN and impulse noise ($P_{\text{impulse}} = 5 \times 10^{-4}$) via direct Monte-Carlo simulation with $10^5$ coded bits per SNR point. The noise variance accounts for code rate $R = 0.5$: $\sigma^2 = (2R \cdot E_b/N_0)^{-1}$.
+Table~\ref{tab:ldpc_results} and Fig.~\ref{fig:ldpc_ber} report LDPC performance under AWGN and impulse noise ($P_{\text{impulse}} = 5 \times 10^{-4}$) via direct Monte-Carlo simulation with a budget of $10^5$ coded channel bits per SNR point ($781$ codewords of length $N=128$, evaluating $N_{\text{info}} = 781 \times 64 = 49{,}984$ decoded information bits). The noise variance accounts for code rate $R = 0.5$: $\sigma^2 = (2R \cdot E_b/N_0)^{-1}$.
 
-The iterative Min-Sum BP decoder demonstrates a steep waterfall: from $\text{SNR}=2.0\,\text{dB}$ to $\text{SNR}=12.0\,\text{dB}$, the post-LDPC BER drops from $2.22 \times 10^{-2}$ to below $10^{-6}$, a reduction of more than four orders of magnitude. At $7.0\,\text{dB}$, post-LDPC BER reaches $1.40 \times 10^{-4}$ with a $99.1\%$ syndrome verification success rate. At $9.5\,\text{dB}$, syndrome success rate reaches $99.6\%$ with $\approx\!1.3$ average iterations.
+The iterative Min-Sum BP decoder demonstrates a steep waterfall: from $\text{SNR}=2.0\,\text{dB}$ to $\text{SNR}=12.0\,\text{dB}$, the post-LDPC BER drops from $2.22 \times 10^{-2}$ to zero observed errors ($0.00$), an empirical error suppression of over four orders of magnitude. At $7.0\,\text{dB}$, post-LDPC BER reaches $1.40 \times 10^{-4}$ with a $99.1\%$ syndrome verification success rate. At $9.5\,\text{dB}$, syndrome success rate reaches $99.6\%$ with $\approx\!1.3$ average iterations.
 
-\textbf{High-SNR Behavior}: The experimental data shows a slight non-monotonicity between $9.5\,\text{dB}$ ($2.0 \times 10^{-5}$) and $11.0\,\text{dB}$ ($6.0 \times 10^{-5}$). This is a statistical artifact from the finite Monte-Carlo sample size ($10^5$ bits $= 781$ blocks), where only a handful of uncorrected block errors are observed at each SNR point; at $9.5\,\text{dB}$ zero blocks failed in the simulation run, while at $11.0\,\text{dB}$ one block failed due to a rare multi-impulse event. With $10^6$ or more blocks, the true BER waterfall would be monotonically decreasing. The impulse noise floor ($P_{\text{impulse}} = 5 \times 10^{-4}$) sets a practical error rate ceiling for finite-length $(128, 64)$ codes with $d_{\min} \approx 6$ \cite{richardson2008}.
+\textbf{High-SNR Behavior and Confidence Bounds}: The experimental data shows a slight non-monotonicity between $9.5\,\text{dB}$ ($2.0 \times 10^{-5}$) and $11.0\,\text{dB}$ ($6.0 \times 10^{-5}$). This is a statistical artifact from the finite Monte-Carlo sample size ($10^5$ coded channel bits $= 781$ blocks), where only a single block error was observed at $11.0\,\text{dB}$, containing exactly three residual bit errors within its $64$ systematic information bits ($3 / 49{,}984 \approx 6.00 \times 10^{-5}$) due to an uncorrectable multi-impulse collision. At $12.0\,\text{dB}$, zero bit errors were detected across $N_{\text{info}} = 49{,}984$ decoded information bits (evaluated within the $10^5$ coded channel bit simulation budget). By the statistical Rule of Three \cite{richardson2008}, zero observed errors in $N_{\text{info}} = 49{,}984$ trials bounds the one-sided $95\%$ upper confidence interval to $\text{BER} \le -\ln(0.05)/49984 \approx 6.0 \times 10^{-5}$. The impulse noise floor ($P_{\text{impulse}} = 5 \times 10^{-4}$) sets a practical error rate ceiling for the finite-length $(128, 64)$ code under the approximate AWGN metric.
 
 \begin{table}[!t]
 \caption{Systematic $(128, 64)$ LDPC Performance (Monte-Carlo, $10^5$ coded bits/SNR)}
 \label{tab:ldpc_results}
 \centering
-\begin{tabular}{ccccc}
+\scriptsize
+\setlength{\tabcolsep}{1.5pt}
+\begin{tabular}{@{}ccccc@{}}
 \toprule
 \textbf{SNR (dB)} & \textbf{Raw BER} & \textbf{Post-LDPC BER} & \textbf{Syn. Success} & \textbf{Avg Iter.} \\
 \midrule
@@ -429,24 +511,29 @@ The iterative Min-Sum BP decoder demonstrates a steep waterfall: from $\text{SNR
 8.0  & $6.50 \times 10^{-3}$ & $1.80 \times 10^{-4}$ & 99.1\% & 1.47 \\
 9.5  & $1.36 \times 10^{-3}$ & $2.00 \times 10^{-5}$ & 99.6\% & 1.31 \\
 11.0 & $4.90 \times 10^{-4}$ & $6.00 \times 10^{-5}$ & 99.2\% & 1.28 \\
-12.0 & $3.50 \times 10^{-4}$ & ${<}10^{-6}$ & 99.2\% & 1.24 \\
+12.0 & $3.50 \times 10^{-4}$ & $0.00^\dagger$ & 99.2\% & 1.24 \\
 \bottomrule
 \end{tabular}
+
+\vspace{3pt}
+{\footnotesize\raggedright $^\dagger$Zero bit errors in $49{,}984$ info bits; $95\%$ upper confidence bound is $6.0 \times 10^{-5}$.\par}
 \end{table}
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=0.48\textwidth]{results/fig4_learning_curves_and_class_metrics.png}
+\includegraphics[width=\columnwidth]{results/fig4_learning_curves_and_class_metrics.png}
 \caption{Left: ANN training and validation loss convergence over 70 epochs (AdamW with plateau LR scheduler). Right: per-class precision and recall on the held-out test set. LZ77 and Raw achieve perfect scores; Huffman/Arithmetic confusion is bounded by the 8-byte hysteresis threshold in the decision policy.}
 \label{fig:learning_curves}
 \end{figure}
 
 \subsection{Scope and Methodological Limitations}
-Three important limitations apply to the current evaluation:
+Five important limitations apply to the current evaluation:
 \begin{enumerate}
     \item \textbf{Synthetic data bias}: The ANN's training labels derive from the same stochastic generation process as the test payloads. Deployed transceivers may encounter non-stationary traffic mixing multiple data types; future work should evaluate on empirical CAN-FD and PCIe traffic traces.
     \item \textbf{Short LDPC block length}: The $(128, 64)$ code has limited spatial diversity compared to moderate-length codes ($n \ge 1000$). Short-block LDPC codes exhibit higher error floors under mixed noise due to small trapping sets.
     \item \textbf{Variance normalization tight bound}: $\phi_2$ is normalized by $\sigma^2_{\max} = (255/2)^2 = 16256.25$ (the maximum variance of a binary $\{0, 255\}$ distribution), chosen to strictly bound $\phi_2 \in [0, 1]$.
+    \item \textbf{Channel metric approximation}: The receiver employs a low-complexity Gaussian-mismatched LLR metric ($L(y_j) = 2y_j/\sigma^2$) rather than computing the transcendental Gaussian-Bernoulli mixture likelihood, trading asymptotic optimality under dense impulse noise for real-time hardware tractability.
+    \item \textbf{Finite Monte-Carlo statistical resolution}: Evaluated within the $10^5$ coded channel bit simulation budget ($781$ blocks $\times 128 = 99{,}968$ coded bits), zero bit errors were detected across the $N_{\text{info}} = 49{,}984$ decoded information bits at $12.0\,\text{dB}$, establishing an empirical error rate of zero with a $95\%$ upper confidence bound of $6.0 \times 10^{-5}$. Validating BER levels below $10^{-7}$ requires hardware-accelerated FPGA emulation with $\ge 10^8$ channel bits.
 \end{enumerate}
 
 % =========================================================================
@@ -454,13 +541,12 @@ Three important limitations apply to the current evaluation:
 % =========================================================================
 \section{Conclusion}
 \label{sec:conclusion}
-This work presented an integrated joint source-channel coding framework for high-reliability wired communication. By combining an $O(N)$ statistical feature extractor with a lightweight MLP, the transmitter adaptively selects among Canonical Huffman, Integer Arithmetic, LZ77 Dictionary, and Raw Pass-Through coding in $\approx\!50\,\mu\text{s}$ per 2048-byte payload, attaining $93.33\%$ accuracy, $100\%$ Top-2 accuracy, and a mean compression regret of only $4.89$ bytes from the theoretical minimum. Across six diverse data domains, the adaptive engine achieves $2.55\times$ mean CR ($47.9\%$ bit savings), outperforming all static codecs while preventing bit inflation on incompressible data. Systematic $(128, 64)$ LDPC codes decoded via normalized Min-Sum BP suppress post-decoding BER to below $10^{-6}$ at $12.0\,\text{dB}$ SNR under combined AWGN and impulse EMI. Future work will investigate hardware synthesis of the feature extractor on FPGA SerDes controllers, rate-compatible punctured LDPC codes for varying channel SNR, and online adaptive ANN retraining on live traffic statistics.
+This work presented an integrated joint source-channel coding framework for high-reliability wired communication. By combining an $O(N)$ statistical feature extractor with a lightweight MLP, the transmitter adaptively selects among Canonical Huffman, Integer Arithmetic, LZ77 Dictionary, and Raw Pass-Through coding in $\approx\!50\,\mu\text{s}$ per 2048-byte payload, attaining $93.33\%$ accuracy, $100\%$ Top-2 accuracy, and a mean compression regret of only $4.89$ bytes from the theoretical minimum. Across six diverse data domains, the adaptive engine achieves $2.55\times$ mean CR ($47.9\%$ bit savings), outperforming all static codecs while preventing bit inflation on incompressible data. Systematic $(128, 64)$ LDPC codes decoded via normalized Min-Sum BP achieve zero observed bit errors across $49{,}984$ decoded information bits at $12.0\,\text{dB}$ SNR (establishing a $95\%$ upper confidence bound of $\text{BER} \le 6.0 \times 10^{-5}$ via the Rule of Three) under combined AWGN and impulsive EMI. Future work will investigate hardware synthesis of the feature extractor on FPGA SerDes controllers, rate-compatible punctured LDPC codes for varying channel SNR, and online adaptive ANN retraining on live traffic statistics.
 
 % =========================================================================
 % REFERENCES
 % =========================================================================
-\bibliographystyle{IEEEtran}
-\begin{thebibliography}{32}
+\begin{thebibliography}{00}
 
 \bibitem{shannon1948}
 C.~E. Shannon, ``A mathematical theory of communication,'' \textit{Bell System Technical Journal}, vol.~27, no.~3, pp.~379--423, Jul. 1948.

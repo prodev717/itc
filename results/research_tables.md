@@ -16,15 +16,17 @@
 
 ## Table II: Cross-Domain Lossless Source Coding Performance
 
-| Data Domain                |   Huffman CR |   Arithmetic CR |   LZ77 Dict CR | Proposed Adaptive CR   | Bit Saving (%)   | Fidelity (at SNR=7dB)   |
-|----------------------------|--------------|-----------------|----------------|------------------------|------------------|-------------------------|
-| binary_code                |         2.21 |            2.25 |           1.87 | **2.25**               | 55.4%            | 64.0% Lossless          |
-| dyadic_skewed              |         4.02 |            4.02 |           2.93 | **4.02**               | 75.1%            | 82.0% Lossless          |
-| json_structured            |         1.63 |            1.64 |           4.41 | **4.41**               | 77.3%            | 82.0% Lossless          |
-| random_payload             |         1.01 |            1.01 |           1    | **1.00**               | 0.0%             | 46.0% Lossless          |
-| sensor_gaussian            |         1.29 |            1.3  |           1.24 | **1.29**               | 22.5%            | 32.0% Lossless          |
-| text_natural               |         1.9  |            1.91 |           2.32 | **2.32**               | 56.9%            | 58.0% Lossless          |
-| **Overall Benchmark Mean** |         2.01 |            2.02 |           2.3  | **2.55**               | **47.9%**        | 60.7% Lossless          |
+| Data Domain                |   Huffman CR |   Arithmetic CR |   LZ77 Dict CR | Proposed Adaptive CR   | Bit Saving (%)   | Fidelity (at SNR=7dB, Counts) |
+|----------------------------|--------------|-----------------|----------------|------------------------|------------------|-------------------------------|
+| binary_code                |         2.21 |            2.25 |           1.87 | **2.25**               | 55.4%            | 64.0% (32/50) Lossless        |
+| dyadic_skewed              |         4.02 |            4.02 |           2.93 | **4.02**               | 75.1%            | 82.0% (41/50) Lossless        |
+| json_structured            |         1.63 |            1.64 |           4.41 | **4.41**               | 77.3%            | 82.0% (41/50) Lossless        |
+| random_payload             |         1.01 |            1.01 |           1    | **1.00**               | 0.0%             | 46.0% (23/50) Lossless        |
+| sensor_gaussian            |         1.29 |            1.3  |           1.24 | **1.29**               | 22.5%            | 32.0% (16/50) Lossless        |
+| text_natural               |         1.9  |            1.91 |           2.32 | **2.32**               | 56.9%            | 58.0% (29/50) Lossless        |
+| **Overall Benchmark Mean** |         2.01 |            2.02 |           2.3  | **2.55**               | **47.9%**        | 60.7% (182/300) Lossless      |
+
+\* PDR values in Table II reflect the unified 300-payload sequential benchmark suite (`run_experiments.py`, seed 123). In isolated domain replication trials (`verify_sensor_pdr.py`), sensor delivery achieves 42.0% to 48.0% (mean 45.0%), matching the model prediction (48.6%).
 
 ## Table III: (128, 64) LDPC Channel Coding Performance over Wired Channel
 
@@ -38,4 +40,6 @@
 | 8.0 dB        |        0.0065021  |      0.00018006 | 99.1%                   |                1.29 |
 | 9.5 dB        |        0.0013604  |      2.0006e-05 | 99.6%                   |                1.12 |
 | 11.0 dB       |        0.00049016 |      6.0019e-05 | 99.2%                   |                1.21 |
-| 12.0 dB       |        0.00035011 |      1e-07      | 99.2%                   |                1.23 |
+| 12.0 dB       |        0.00035011 |      0.000000*  | 99.2%                   |                1.23 |
+
+\* Zero bit errors observed in 49,984 decoded information bits ($10^5$ coded bits); Rule of Three 95% upper confidence bound: $\text{BER} \le 6.0 \times 10^{-5}$.
