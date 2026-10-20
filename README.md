@@ -1,77 +1,12 @@
 # ANN-Based Adaptive Source Coding with Systematic LDPC Channel Coding for Lossless Wired Communication
 
-[![IEEE Conference](https://img.shields.io/badge/Paper-IEEE%20Conference-blue.svg)](paper_sections.tex)
-[![Python](https://img.shields.io/badge/Python-3.12-brightgreen.svg)](pyproject.toml)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.5+-ee4c2c.svg)](https://pytorch.org/)
-[![Status](https://img.shields.io/badge/Status-Submission%20Candidate-success.svg)](paper_sections.tex)
-
 An end-to-end research project combining **Neural Network Adaptive Source Coding** with **Systematic (128, 64) Low-Density Parity-Check (LDPC) Channel Coding** for high-efficiency, noise-resilient lossless wired data transmission.
-
-**Authors:** Ganesh M, Muhammad Sajid Y, Komali Priya P, and Dr. M. Mahesh  
-*School of Computer Science and Engineering & School of Electronics Engineering, VIT-AP University, Amaravati, Andhra Pradesh, India*
 
 ---
 
-## 1. Executive Summary & Architecture
+## 1. Executive Summary
 
 Traditional wired communication transceivers (e.g., PCIe, SerDes, automotive CAN-FD, industrial Fieldbus) deploy static source codecs and legacy single-error-correcting block codes (such as Hamming(7,4) with $d_{\min}=3$). Under non-stationary traffic and electromagnetic impulse interference (EMI), static compressors incur data expansion on high-entropy payloads, and Hamming decoders suffer catastrophic decoding breakdowns.
-
-This work implements an integrated physical-layer communication pipeline:
-
-```
-+---------------------------------------------------------------------------------------------------------+
-|                                              TRANSMITTER                                                |
-|                                                                                                         |
-|   Raw Payload (2048 B)                                                                                  |
-|          |                                                                                              |
-|          +--> [ O(N) Feature Extractor ] ---> 8-dim vector phi(x)                                       |
-|          |                                          |                                                   |
-|          |                                          v                                                   |
-|          |                            [ LayerNorm MLP Classifier ]                                      |
-|          |                               (50.4 us inference)                                            |
-|          |                                          |                                                   |
-|          |                                          v                                                   |
-|          |                          Preamble 2-bit tag (00, 01, 10, 11)                                 |
-|          |                                          |                                                   |
-|          +--> [ Dynamic Codec Dispatch ] <----------+                                                   |
-|                     |-- (0) Canonical Huffman (dyadic distributions)                                    |
-|                     |-- (1) 32-bit Integer Arithmetic (smooth Gaussian sensor data)                     |
-|                     |-- (2) Sliding-Window LZ77 (structured JSON & text)                                |
-|                     +-- (3) Raw Pass-Through (prevents expansion on random data)                        |
-|                                     |                                                                   |
-|                             Compressed Bitstream                                                        |
-|                                     |                                                                   |
-|                       [ Systematic (128, 64) LDPC Encoder ]                                             |
-|                                 c = [ m | m * P^T ]                                                     |
-|                                     |                                                                   |
-|                              BPSK Modulation                                                            |
-+---------------------------------------------------------------------------------------------------------+
-                                      |
-                                      v
-+---------------------------------------------------------------------------------------------------------+
-|                                    WIRED PHYSICAL CHANNEL                                               |
-|                    y_j = s_j + n_j + b_j * A_j  (AWGN + Bernoulli Impulsive EMI)                        |
-|                     n_j ~ N(0, sigma^2),  b_j ~ Bernoulli(5e-4),  A_j in { -3.0, +3.0 }                 |
-+---------------------------------------------------------------------------------------------------------+
-                                      |
-                                      v
-+---------------------------------------------------------------------------------------------------------+
-|                                               RECEIVER                                                  |
-|                                                                                                         |
-|                      [ Gaussian-Mismatched LLR: L(y) = 2y / sigma^2 ]                                   |
-|                                     |                                                                   |
-|                 [ Normalized Min-Sum Belief Propagation Decoder ]                                       |
-|                   (alpha = 0.85, max_iter = 25, syndrome early exit)                                    |
-|                                     |                                                                   |
-|                           Systematic Info Bits                                                          |
-|                                     |                                                                   |
-|                    [ Dynamic Lossless Source Decompressor ]                                             |
-|                         (Selected via preamble codec tag)                                               |
-|                                     |                                                                   |
-|                        Reconstructed Byte Payload                                                       |
-|                     (Bit-for-bit lossless verification)                                                 |
-+---------------------------------------------------------------------------------------------------------+
-```
 
 ---
 
