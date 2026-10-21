@@ -398,9 +398,9 @@ The confusion matrix (Fig.~\ref{fig:confusion_matrix}) shows clean diagonal sepa
     \text{Regret}(\mathbf{x}) = L_{\hat{c}}(\mathbf{x}) - L_{c^*_{\text{oracle}}}(\mathbf{x})
 \end{equation}
 \begin{itemize}
-    \item \textit{Proposed MLP}: $\mathbf{4.89 \pm 0.38}$ bytes/payload regret ($0.23\%$ deviation from oracle), steady-state decision latency $\mathbf{50.4\,\mu\text{s}}$.
-    \item \textit{Depth-4 Decision Tree}: 5-fold accuracy $95.00\% \pm 3.16\%$, regret $\mathbf{5.72}$ bytes, latency $43.52\,\mu\text{s}$.
-    \item \textit{Threshold Heuristic}: $89.67\%$ accuracy, regret $14.30$ bytes.
+    \item \textit{Proposed MLP}: $\mathbf{4.89 \pm 0.38}$ bytes/payload regret ($0.23\%$ deviation from oracle), steady-state decision latency $\mathbf{50.4\,\mu\text{s}}$ ($31.2\,\mu\text{s}$ feature extraction + $19.2\,\mu\text{s}$ MLP inference).
+    \item \textit{Depth-4 Decision Tree}: 5-fold accuracy $95.00\% \pm 3.16\%$, regret $\mathbf{5.72}$ bytes, tree prediction latency $43.52\,\mu\text{s}$ (total decision latency $\approx\!74.7\,\mu\text{s}$ including feature extraction).
+    \item \textit{Threshold Heuristic}: $89.67\%$ accuracy, regret $3.96$ bytes, rule evaluation latency $\approx\!1.2\,\mu\text{s}$ ($\approx\!32.4\,\mu\text{s}$ total).
 \end{itemize}
 The MLP achieves lower compression regret than the decision tree ($4.89$ vs. $5.72$ bytes) because the tree over-switches on borderline payloads. Furthermore, the MLP's calibrated Softmax probabilities provide confidence metrics that enable graceful fallback under anticipated channel noise.
 

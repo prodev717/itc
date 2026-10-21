@@ -171,8 +171,10 @@ Monte-Carlo simulation budget of $10^5$ coded channel bits ($781$ codewords, $N_
 ├── main.py                         # Interactive live CLI transceiver demo
 ├── experiments/
 │   ├── run_experiments.py         # Master benchmark suite: dataset, ANN training, SNR sweeps, plots
+│   ├── verify_decision_tree_baseline.py # Replication script for Decision Tree & heuristic baseline comparison
 │   └── verify_sensor_pdr.py        # Independent replication script for sensor PDR verification
 ├── results/
+│   ├── decision_tree_verification.log             # Raw verification log for Decision Tree baseline
 │   ├── fig1_ann_confusion_matrix.png              # Confusion matrix on held-out test set
 │   ├── fig2_compression_ratio_by_domain.png       # Compression ratio comparison across 6 domains
 │   ├── fig3_ldpc_ber_waterfall.png                # BER waterfall curves (Uncoded vs. LDPC)
@@ -222,4 +224,10 @@ uv run python experiments/run_experiments.py
 Independently verifies message block error rates ($\text{BLER}_{\text{msg}}$) and packet delivery rates on sensor telemetry under varying random seeds:
 ```bash
 uv run python experiments/verify_sensor_pdr.py
+```
+
+### 4. Run the Decision Tree & Baseline Arbiter Replication Suite
+Independently verifies the 5-fold cross-validation accuracy ($95.00\% \pm 3.16\%$), compression regret ($5.72\,\text{bytes}$), and latency of the Depth-4 Decision Tree and threshold heuristic compared to the proposed MLP ($4.89\,\text{bytes}$ regret):
+```bash
+uv run python experiments/verify_decision_tree_baseline.py
 ```
