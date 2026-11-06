@@ -13,7 +13,7 @@ Traditional wired communication transceivers (e.g., PCIe, SerDes, automotive CAN
 ## 2. Key Contributions & Verification Details
 
 1. **Ultra-Fast $O(N)$ Streaming Feature Extractor**:
-   - Computes an 8-dimensional normalized metric vector $\bm{\phi}(\mathbf{x})$: Shannon entropy ($\phi_1$), byte variance ($\phi_2$), zero-byte density ($\phi_3$), repeat ratio ($\phi_4$), lag-1 autocorrelation ($\phi_5$), alphabet cardinality ($\phi_6$), upper-half byte ratio ($\phi_7$), and top-4 symbol concentration ($\phi_8$).
+   - Computes an 8-dimensional normalized metric vector ${\phi}(\mathbf{x})$: Shannon entropy ($\phi_1$), byte variance ($\phi_2$), zero-byte density ($\phi_3$), repeat ratio ($\phi_4$), lag-1 autocorrelation ($\phi_5$), alphabet cardinality ($\phi_6$), upper-half byte ratio ($\phi_7$), and top-4 symbol concentration ($\phi_8$).
    - Latency: **$31.2\,\mu\text{s}$** per 2048-byte payload.
 
 2. **Cost-Sensitive MLP Codec Arbiter**:
@@ -139,8 +139,8 @@ Monte-Carlo simulation budget of $10^5$ coded channel bits ($781$ codewords, $N_
 - Python 3.10+ (Recommended: Python 3.12)
 - Virtual environment with dependencies installed (via `uv` or `pip`):
   ```bash
-  uv venv
-  uv pip install -e .
+  pip install uv
+  uv sync
   ```
 
 ### 1. Run the Interactive Pipeline Demonstration
